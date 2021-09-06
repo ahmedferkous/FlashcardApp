@@ -3,17 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
 
     <LinearLayout
         android:id="@+id/linLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             app:cardBackgroundColor="@color/darkBlue"
@@ -37,7 +38,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             app:cardBackgroundColor="@color/darkBlue"
@@ -64,7 +65,7 @@
 
     <TextView
         android:id="@+id/txtRemoveCard"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/linLayout"
@@ -76,11 +77,9 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="10dp"
         android:layout_below="@id/txtRemoveCard"
-        android:layout_margin="5dp"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
+        android:layout_margin="10dp"
         android:background="@drawable/dashed_dotted_line" />
 
 </RelativeLayout>
