@@ -35,6 +35,7 @@ public class FragmentNewSet extends Fragment implements CardsAdapter.onRemovedCa
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_set, container, false);
         initViews(view);
+        getActivity().setTitle("New Set");
         btnAddNewCard = view.findViewById(R.id.btnAddNewCard);
 
         btnAddNewCard.setOnClickListener(new View.OnClickListener() {
