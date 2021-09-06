@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_home"
+        android:orderInCategory="100"
+        android:title="Home"
+        android:icon="@drawable/ic_home"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_options"
+        android:orderInCategory="100"
+        android:title="Options"
+        android:icon="@drawable/ic_options"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_create_flashcards"
+        android:title="Create Flashcards">
+    </item>
+
+    <item
+        android:id="@+id/action_my_flashcards"
+        android:title="My Flashcards">
+    </item>
+
+    <item
+        android:id="@+id/action_recently_studied"
+        android:title="Recently Studied">
+    </item>
+
+    <item
+        android:id="@+id/action_favourite"
+        android:title="My Favourite Sets">
+    </item>
+
+
+</menu>
