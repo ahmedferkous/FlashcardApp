@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp">
+    android:layout_margin="15dp">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recView"
@@ -17,7 +17,57 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:text="TEST"
+        android:visibility="gone"
+        android:layout_toStartOf="@id/relLayoutCheckbox"
+        android:layout_marginEnd="15dp"
         android:id="@+id/btnTestMode"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:text="begin (hold to cancel)"
+        android:visibility="gone"
+        android:layout_toStartOf="@id/relLayoutCheckbox"
+        android:layout_marginEnd="15dp"
+        android:id="@+id/btnFinalTestMode"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/relLayoutCheckbox"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/btnCheckboxFilled"
+            android:layout_width="30dp"
+            android:visibility="invisible"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_filledcheckbox"/>
+
+        <ImageView
+            android:id="@+id/btnCheckboxEmpty"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_emptycheckbox"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All"
+            android:textStyle="bold"
+            android:textColor="@color/slightWhite"
+            android:textSize="18sp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/btnCheckboxFilled"/>
+
+    </RelativeLayout>
+
+
+
+
 
 
 

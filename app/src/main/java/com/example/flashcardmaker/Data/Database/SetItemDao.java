@@ -35,6 +35,27 @@ public interface SetItemDao {
     @Query("UPDATE set_items SET favourite=:integer WHERE id=:id")
     void updateFavouritesById(int id, int integer);
 
+    @Query("UPDATE set_items SET selected=:integer WHERE id=:id")
+    void updateSelectedById(int id, int integer);
+
+    @Query("UPDATE set_items SET selected=:integer")
+    void updateSelectedStatusAll(int integer);
+
+    @Query("UPDATE set_items SET selected=:integer WHERE favourite=1")
+    void updateSelectedStatusFavourites(int integer);
+
+    @Query("UPDATE set_items SET selected=:integer WHERE recentlyStudied=1")
+    void updateSelectedStatusRecent(int integer);
+
+    @Query("SELECT COUNT(*) FROM set_items WHERE selected=1")
+    int receiveNumberOfAllSelected();
+
+    @Query("SELECT COUNT(*) FROM set_items WHERE selected=1 AND favourite=1")
+    int receiveNumberOfSelectedFavourites();
+
+    @Query("SELECT COUNT(*) FROM set_items WHERE selected=1 AND recentlyStudied=1")
+    int receiveNumberOfRecentlyStudiedSelected();
+
     @Query("SELECT COUNT(*) FROM set_items")
     int receiveAllSetsNumber();
 
@@ -43,4 +64,13 @@ public interface SetItemDao {
 
     @Query("SELECT COUNT(*) FROM set_items WHERE recentlyStudied=1")
     int receiveRecentlyStudiedSetsNumber();
+
+    @Query("SELECT * FROM set_items WHERE selected=1")
+    List<Set> receiveAllSelectedSets();
+
+    @Query("SELECT * FROM set_items WHERE selected=1 AND favourite=1")
+    List<Set> receiveSelectedFavouriteSets();
+
+    @Query("SELECT * FROM set_items WHERE selected=1 AND recentlyStudied=1")
+    List<Set> receiveSelectedRecentlyStudiedSets();
 }

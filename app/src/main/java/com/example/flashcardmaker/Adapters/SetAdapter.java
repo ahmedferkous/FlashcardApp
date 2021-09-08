@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceControl;
 import android.view.View;
@@ -26,23 +27,49 @@ import com.example.flashcardmaker.Data.Set;
 import com.example.flashcardmaker.Fragments.FragmentAllSets;
 import com.example.flashcardmaker.Fragments.FragmentNewSet;
 import com.example.flashcardmaker.R;
+import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
+    private static final String TAG = "SetAdapter";
+    private boolean shouldShow = false;
     private ArrayList<Set> sets = new ArrayList<>();
     private Context context;
     private FragmentManager manager;
+    private String type;
 
-    public SetAdapter(Context context, FragmentManager manager) {
+    public SetAdapter(Context context, FragmentManager manager, String type) {
         this.context = context;
         this.manager = manager;
+        this.type = type;
     }
 
     public void setSets(ArrayList<Set> sets) {
         this.sets = sets;
+        notifyDataSetChanged();
+    }
+
+    public void setShouldShow(boolean shouldShow) {
+        this.shouldShow = shouldShow;
+        notifyDataSetChanged();
+    }
+
+    public void selectAll() {
+        for (Set s : sets) {
+            s.setSelected(true);
+            new UpdateFavouritesOrSelectedTask(context, type).execute(-1, 1, 0);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void unselectAll() {
+        for (Set s : sets) {
+            s.setSelected(false);
+            new UpdateFavouritesOrSelectedTask(context, type).execute(-1, 0, 0);
+        }
         notifyDataSetChanged();
     }
 
@@ -56,6 +83,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Set boundSet = sets.get(position);
+        Log.d(TAG, "onBindViewHolder: " + boundSet.isSelected());
         holder.txtSetName.setText(boundSet.getTitle());
         holder.txtSetDesc.setText(boundSet.getDesc());
         holder.txtNumCards.setText(boundSet.getSetCards().size() + " Cards");
@@ -73,7 +101,9 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             public void onClick(View v) {
                 holder.imageViewFavouritesFilled.setVisibility(View.VISIBLE);
                 holder.imageViewFavourites.setVisibility(View.INVISIBLE);
-                new UpdateFavouritesSetTask(context).execute(boundSet.getId(), 1);
+                boundSet.setFavourite(true);
+                new UpdateFavouritesOrSelectedTask(context).execute(boundSet.getId(), 1, -1);
+                notifyItemChanged(position);
             }
         });
 
@@ -82,9 +112,46 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             public void onClick(View v) {
                 holder.imageViewFavouritesFilled.setVisibility(View.INVISIBLE);
                 holder.imageViewFavourites.setVisibility(View.VISIBLE);
-                new UpdateFavouritesSetTask(context).execute(boundSet.getId(), 0);
+                boundSet.setFavourite(false);
+                new UpdateFavouritesOrSelectedTask(context).execute(boundSet.getId(), 0, -1);
+                notifyItemChanged(position);
             }
         });
+
+        if (shouldShow) {
+            if (boundSet.isSelected()) {
+                holder.imgViewFilledCheckbox.setVisibility(View.VISIBLE);
+                holder.imgViewEmptyCheckbox.setVisibility(View.INVISIBLE);
+            } else {
+                holder.imgViewFilledCheckbox.setVisibility(View.INVISIBLE);
+                holder.imgViewEmptyCheckbox.setVisibility(View.VISIBLE);
+            }
+
+            holder.imgViewEmptyCheckbox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.imgViewFilledCheckbox.setVisibility(View.VISIBLE);
+                    holder.imgViewEmptyCheckbox.setVisibility(View.INVISIBLE);
+                    boundSet.setSelected(true);
+                    new UpdateFavouritesOrSelectedTask(context).execute(boundSet.getId(), 1, 1);
+                    notifyItemChanged(position);
+                }
+            });
+
+            holder.imgViewFilledCheckbox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.imgViewFilledCheckbox.setVisibility(View.INVISIBLE);
+                    holder.imgViewEmptyCheckbox.setVisibility(View.VISIBLE);
+                    boundSet.setSelected(false);
+                    new UpdateFavouritesOrSelectedTask(context).execute(boundSet.getId(), 0, 1);
+                    notifyItemChanged(position);
+                }
+            });
+        } else {
+            holder.imgViewFilledCheckbox.setVisibility(View.GONE);
+            holder.imgViewEmptyCheckbox.setVisibility(View.GONE);
+        }
 
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,8 +204,8 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtSetName, txtSetDesc, txtNumCards;
-        private ImageView imageViewFavourites, imageViewFavouritesFilled;
-        private RelativeLayout parent;
+        private ImageView imageViewFavourites, imageViewFavouritesFilled, imgViewFilledCheckbox, imgViewEmptyCheckbox;
+        private MaterialCardView parent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -147,22 +214,52 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             txtNumCards = itemView.findViewById(R.id.txtNumCards);
             imageViewFavourites = itemView.findViewById(R.id.imgViewFavourite);
             imageViewFavouritesFilled = itemView.findViewById(R.id.imgViewFavouriteFilled);
+            imgViewFilledCheckbox = itemView.findViewById(R.id.imgViewFilledCheckbox);
+            imgViewEmptyCheckbox = itemView.findViewById(R.id.imgViewEmptyCheckbox);
             parent = itemView.findViewById(R.id.parent);
         }
     }
 
-    private static class UpdateFavouritesSetTask extends AsyncTask<Integer, Void, Void> {
+    private static class UpdateFavouritesOrSelectedTask extends AsyncTask<Integer, Void, Void> {
         private SetItemDao dao;
+        private String type = "";
 
-        public UpdateFavouritesSetTask(Context context) {
+        public UpdateFavouritesOrSelectedTask(Context context) {
             dao = SetDatabase.getInstance(context).setItemDao();
+        }
+
+        public UpdateFavouritesOrSelectedTask(Context context, String type) {
+            dao = SetDatabase.getInstance(context).setItemDao();
+            this.type = type;
         }
 
         @Override
         protected Void doInBackground(Integer... integers) {
-            int setId = integers[0];
-            int boolShowFavourite = integers[1];
-            dao.updateFavouritesById(setId, boolShowFavourite);
+            if (integers[2] == -1) {
+                int setId = integers[0];
+                int boolShowFavourite = integers[1];
+                dao.updateFavouritesById(setId, boolShowFavourite);
+            } else if (integers[2] == 0) {
+                int boolSelectedAll = integers[1];
+                switch (type) {
+                    case FragmentAllSets.ALL_SETS:
+                        Log.d(TAG, "doInBackground: ?");
+                        dao.updateSelectedStatusAll(boolSelectedAll);
+                        break;
+                    case FragmentAllSets.FAVOURITE_SETS:
+                        dao.updateSelectedStatusFavourites(boolSelectedAll);
+                        break;
+                    case FragmentAllSets.RECENTLY_STUDIED_SETS:
+                        dao.updateSelectedStatusRecent(boolSelectedAll);
+                        break;
+                    default:
+                        break;
+                }
+            } else if (integers[2] == 1){
+                int setId = integers[0];
+                int boolSelected = integers[1];
+                dao.updateSelectedById(setId, boolSelected);
+            }
             return null;
         }
     }

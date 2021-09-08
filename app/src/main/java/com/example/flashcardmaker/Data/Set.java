@@ -19,6 +19,7 @@ public class Set {
     private String desc = "Set Description";
     @TypeConverters(CardsTypeConverter.class)
     private ArrayList<Card> setCards;
+    private boolean selected;
 
     @Ignore
     public Set() {
@@ -28,6 +29,14 @@ public class Set {
         this.title = title;
         this.desc = desc;
         this.setCards = setCards;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public int getId() {

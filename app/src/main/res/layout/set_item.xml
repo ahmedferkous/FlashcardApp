@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
+        android:id="@+id/parent"
+        android:layout_marginRight="6dp"
+        android:layout_toStartOf="@id/imgViewEmptyCheckbox"
         android:layout_height="wrap_content">
 
         <RelativeLayout
@@ -46,43 +48,42 @@
 
             <ImageView
                 android:id="@+id/imgViewFavourite"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_below="@id/txtSetDesc"
-                android:layout_marginEnd="10dp"
-                android:layout_toStartOf="@id/imgViewEmptyCheckbox"
+                android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_favourites" />
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/ic_emptycheckbox"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@id/txtSetDesc"
-                android:id="@+id/imgViewEmptyCheckbox"/>
-
-            <ImageView
-                android:layout_width="25dp"
-                android:visibility="invisible"
-                android:layout_height="25dp"
-                android:src="@drawable/ic_filledcheckbox"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@id/txtSetDesc"
-                android:id="@+id/imgViewFilledCheckbox"/>
 
 
             <ImageView
                 android:id="@+id/imgViewFavouriteFilled"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:visibility="invisible"
                 android:layout_below="@id/txtSetDesc"
-                android:layout_marginEnd="10dp"
-                android:layout_toStartOf="@id/imgViewEmptyCheckbox"
+                android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_favouritesfilled" />
 
 
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_emptycheckbox"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/imgViewEmptyCheckbox"/>
+
+    <ImageView
+        android:layout_width="30dp"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_filledcheckbox"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/imgViewFilledCheckbox"/>
 
 </RelativeLayout>
