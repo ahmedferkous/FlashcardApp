@@ -62,9 +62,9 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
 
         if (boundSet.isFavourite()) {
             holder.imageViewFavouritesFilled.setVisibility(View.VISIBLE);
-            holder.imageViewFavourites.setVisibility(View.GONE);
+            holder.imageViewFavourites.setVisibility(View.INVISIBLE);
         } else {
-            holder.imageViewFavouritesFilled.setVisibility(View.GONE);
+            holder.imageViewFavouritesFilled.setVisibility(View.INVISIBLE);
             holder.imageViewFavourites.setVisibility(View.VISIBLE);
         }
 
@@ -72,7 +72,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 holder.imageViewFavouritesFilled.setVisibility(View.VISIBLE);
-                holder.imageViewFavourites.setVisibility(View.GONE);
+                holder.imageViewFavourites.setVisibility(View.INVISIBLE);
                 new UpdateFavouritesSetTask(context).execute(boundSet.getId(), 1);
             }
         });
@@ -80,7 +80,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         holder.imageViewFavouritesFilled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.imageViewFavouritesFilled.setVisibility(View.GONE);
+                holder.imageViewFavouritesFilled.setVisibility(View.INVISIBLE);
                 holder.imageViewFavourites.setVisibility(View.VISIBLE);
                 new UpdateFavouritesSetTask(context).execute(boundSet.getId(), 0);
             }

@@ -1,8 +1,11 @@
 package com.example.flashcardmaker.Fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class FragmentAllSets extends Fragment {
+    private static final String TAG = "FragmentAllSets";
     public static final String ALL_SETS = "all_sets";
     public static final String TYPE_SET = "type_set";
     public static final String FAVOURITE_SETS = "favourite_sets";
@@ -34,6 +38,12 @@ public class FragmentAllSets extends Fragment {
     private RecyclerView recView;
     private SetAdapter adapter;
     private Button btnTestMode;
+    private DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            Log.d(TAG, "onClick: " + which);
+        }
+    };
 
     @Nullable
     @Override
@@ -56,8 +66,22 @@ public class FragmentAllSets extends Fragment {
                 task.execute(RECENTLY_STUDIED_SETS);
             }
         }
+        
+        btnTestMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                        .setTitle("Select your test mode (" + getSelected() + " Sets currently selected)")
+                        .setItems(new CharSequence[] {"Feedback", "Timed"}, listener);
+                builder.create().show();
+            }
+        });
 
         return view;
+    }
+
+    private int getSelected() {
+        return 0;
     }
 
     private void initViews(View view) {

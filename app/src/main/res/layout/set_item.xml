@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="6dp"
-    android:id="@+id/parent">
+    android:layout_margin="6dp">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -15,51 +15,71 @@
             android:layout_margin="15dp">
 
             <TextView
+                android:id="@+id/txtSetName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:layout_toStartOf="@id/txtNumCards"
                 android:text="Set Name"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/txtSetName"/>
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/txtSetDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set Description"
                 android:layout_below="@id/txtSetName"
                 android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:id="@+id/txtSetDesc"/>
+                android:text="Set Description"
+                android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/txtNumCards"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/txtNumCards"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
                 android:text="5 Cards"
                 android:textSize="18sp"
-                android:textStyle="italic"/>
+                android:textStyle="italic" />
 
             <ImageView
-                android:layout_width="25dp"
                 android:id="@+id/imgViewFavourite"
+                android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_below="@id/txtSetDesc"
-                android:src="@drawable/ic_favourites"
-                android:layout_alignParentEnd="true"/>
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/imgViewEmptyCheckbox"
+                android:src="@drawable/ic_favourites" />
 
             <ImageView
                 android:layout_width="25dp"
-                android:id="@+id/imgViewFavouriteFilled"
                 android:layout_height="25dp"
-                android:visibility="gone"
+                android:src="@drawable/ic_emptycheckbox"
+                android:layout_alignParentEnd="true"
                 android:layout_below="@id/txtSetDesc"
-                android:src="@drawable/ic_favouritesfilled"
-                android:layout_alignParentEnd="true"/>
+                android:id="@+id/imgViewEmptyCheckbox"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:visibility="invisible"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_filledcheckbox"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/txtSetDesc"
+                android:id="@+id/imgViewFilledCheckbox"/>
+
+
+            <ImageView
+                android:id="@+id/imgViewFavouriteFilled"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:visibility="invisible"
+                android:layout_below="@id/txtSetDesc"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/imgViewEmptyCheckbox"
+                android:src="@drawable/ic_favouritesfilled" />
 
 
         </RelativeLayout>
