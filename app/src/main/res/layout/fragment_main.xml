@@ -60,7 +60,7 @@
                 android:textSize="25sp" />
 
             <TextView
-                android:id="@+id/numSets"
+                android:id="@+id/txtNumSetsAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -72,7 +72,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/numSets"
+                android:layout_below="@id/txtNumSetsAll"
                 android:layout_alignParentEnd="true"
                 android:text="Sets"
                 android:textColor="@color/white"
@@ -105,7 +105,7 @@
                 android:textSize="25sp" />
 
             <TextView
-                android:id="@+id/numSets2"
+                android:id="@+id/txtNumSetsRecent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -117,7 +117,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/numSets2"
+                android:layout_below="@id/txtNumSetsRecent"
                 android:layout_alignParentEnd="true"
                 android:text="Sets"
                 android:textColor="@color/white"
@@ -149,7 +149,7 @@
                 android:textSize="25sp" />
 
             <TextView
-                android:id="@+id/numSets3"
+                android:id="@+id/txtNumSetsFavourite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -161,7 +161,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/numSets3"
+                android:layout_below="@id/txtNumSetsFavourite"
                 android:layout_alignParentEnd="true"
                 android:text="Sets"
                 android:textColor="@color/white"

@@ -34,4 +34,13 @@ public interface SetItemDao {
 
     @Query("UPDATE set_items SET favourite=:integer WHERE id=:id")
     void updateFavouritesById(int id, int integer);
+
+    @Query("SELECT COUNT(*) FROM set_items")
+    int receiveAllSetsNumber();
+
+    @Query("SELECT COUNT(*) FROM set_items WHERE favourite=1")
+    int receiveFavouriteSetsNumber();
+
+    @Query("SELECT COUNT(*) FROM set_items WHERE recentlyStudied=1")
+    int receiveRecentlyStudiedSetsNumber();
 }
