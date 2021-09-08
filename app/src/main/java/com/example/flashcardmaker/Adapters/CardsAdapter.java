@@ -3,24 +3,28 @@ package com.example.flashcardmaker.Adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.flashcardmaker.DataObjects.Card;
+import com.example.flashcardmaker.Data.Card;
+import com.example.flashcardmaker.Data.Set;
 import com.example.flashcardmaker.R;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
+    public static final String FRONT = "front";
+    public static final String BACK = "back";
+
+
     public interface onRemovedCard {
         void onRemovedCardResult();
     }
@@ -59,6 +63,10 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         Card boundCard = cards.get(position);
         holder.edtTxtFront.setText(boundCard.getFront());
         holder.edtTxtBack.setText(boundCard.getBack());
+
+        holder.edtTxtFront.addTextChangedListener(new CustomEditTxtListener(position, FRONT));
+        holder.edtTxtBack.addTextChangedListener(new CustomEditTxtListener(position, BACK));
+
         holder.txtRemoveCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +101,38 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             edtTxtFront = itemView.findViewById(R.id.edtTxtFront);
             edtTxtBack = itemView.findViewById(R.id.edtTxtBack);
             txtRemoveCard = itemView.findViewById(R.id.txtRemoveCard);
+        }
+    }
+
+    private class CustomEditTxtListener implements TextWatcher {
+        private int position;
+        private String type;
+
+        public CustomEditTxtListener(int position, String type) {
+            this.position = position;
+            this.type = type;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Card card = cards.get(position);
+            if (type.equals(FRONT)) {
+                card.setFront(s + "");
+            } else {
+                card.setBack(s + "");
+            }
+            cards.set(position, card);
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
         }
     }
 }

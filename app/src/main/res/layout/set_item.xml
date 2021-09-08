@@ -44,6 +44,23 @@
                 android:textSize="18sp"
                 android:textStyle="italic"/>
 
+            <ImageView
+                android:layout_width="25dp"
+                android:id="@+id/imgViewFavourite"
+                android:layout_height="25dp"
+                android:layout_below="@id/txtSetDesc"
+                android:src="@drawable/ic_favourites"
+                android:layout_alignParentEnd="true"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:id="@+id/imgViewFavouriteFilled"
+                android:layout_height="25dp"
+                android:visibility="gone"
+                android:layout_below="@id/txtSetDesc"
+                android:src="@drawable/ic_favouritesfilled"
+                android:layout_alignParentEnd="true"/>
+
 
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -14,16 +14,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txtDescTitle"
-                android:visibility="gone"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Set"
-                android:textColor="@color/slightWhite"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Save Set"
+                android:textColor="@color/slightWhite" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txtInputTitle"
@@ -37,7 +34,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
                     android:scrollbars="horizontal"
-                    android:text="Title name for your set" />
+                    android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -52,26 +49,24 @@
                     android:layout_marginTop="10dp"
                     android:gravity="top|left"
                     android:scrollbars="vertical"
-                    android:text="Description of your set" />
+                    android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
+                android:id="@+id/btnAddNewCard"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Add a new card (0)"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:id="@+id/btnAddNewCard"
-                android:layout_gravity="center_horizontal"/>
+                android:text="Add a new card (0)" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
                 android:id="@+id/recView"
-                android:layout_height="wrap_content"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-
 
 
 </LinearLayout>

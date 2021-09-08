@@ -10,20 +10,13 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_options"
-        android:orderInCategory="100"
-        android:title="Options"
-        android:icon="@drawable/ic_options"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_create_flashcards"
-        android:title="Create Flashcards">
+        android:title="Create A New Set">
     </item>
 
     <item
         android:id="@+id/action_my_flashcards"
-        android:title="My Flashcards">
+        android:title="View All Your Sets">
     </item>
 
     <item
@@ -35,6 +28,10 @@
         android:id="@+id/action_favourite"
         android:title="My Favourite Sets">
     </item>
+
+    <item
+        android:id="@+id/action_options"
+        android:title="Options" />
 
 
 </menu>
