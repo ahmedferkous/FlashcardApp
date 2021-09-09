@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="15dp">
+
+    <RelativeLayout
+        android:id="@+id/mainRelLayoutTest"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        >
+
+        <TextView
+            android:id="@+id/txtTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Time Elapsed - 0.00"
+            android:textColor="@color/slightWhite"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtTestTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:text="Card 1/45"
+            android:textColor="@color/slightWhite"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/childFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/txtInputAnswer"
+            android:layout_below="@id/txtTestTitle"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtInputAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_above="@id/btnSubmitAnswer"
+            android:layout_marginBottom="15dp"
+            android:hint="Your Answer">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtTxtAnswer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:scrollbars="horizontal"
+                android:textSize="18sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnSubmitAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:text="Submit Answer" />
+
+        <Button
+            android:id="@+id/btnNextQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:text="Next question"
+            android:visibility="invisible" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/initialRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtTitleInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/txtTestInfo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:text="Blah Blah Blah"
+            android:textColor="@color/slightWhite"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtTestInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btnStart"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:text="Some Text"
+            android:textColor="@color/slightWhite"
+            android:textSize="20sp"
+            android:textStyle="italic" />
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:text="Start" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/finalInitialRelLayout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtTimeTicking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="3"
+            android:textColor="@color/slightWhite"
+            android:textSize="100sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

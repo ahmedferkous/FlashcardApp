@@ -23,10 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flashcardmaker.Activities.MainActivity;
 import com.example.flashcardmaker.Adapters.SetAdapter;
+import com.example.flashcardmaker.Data.Card;
 import com.example.flashcardmaker.Data.Set;
 import com.example.flashcardmaker.Data.Database.SetDatabase;
 import com.example.flashcardmaker.Data.Database.SetItemDao;
 import com.example.flashcardmaker.R;
+import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -44,12 +46,6 @@ public class FragmentAllSets extends Fragment {
     private Button btnTestMode, btnFinalTestMode;
     private ImageView btnCheckboxEmpty, btnCheckboxFilled;
     private String type;
-    private DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            Log.d(TAG, "onClick: " + which);
-        }
-    };
 
     @Nullable
     @Override
@@ -92,7 +88,7 @@ public class FragmentAllSets extends Fragment {
         btnFinalTestMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new RetrieveSelectedSetsTask(getContext()).execute();
+                new RetrieveSelectedNumberOfSetsTask(getContext(), type).execute();
             }
         });
 
@@ -137,7 +133,37 @@ public class FragmentAllSets extends Fragment {
         btnFinalTestMode = view.findViewById(R.id.btnFinalTestMode);
     }
 
-    private class RetrieveSetsTask extends AsyncTask<String, Void, ArrayList<Set>> {
+    private void setupFragmentChange(Integer integer, Context context, String type) {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FragmentTestMode fragmentTestMode = new FragmentTestMode();
+                Bundle bundle = new Bundle();
+                bundle.putString(TYPE_SET, type);
+                if (which == 0) {
+                    bundle.putString(FragmentTestMode.TYPE_OF_TEST, FragmentTestMode.FEEDBACK_TEST_MODE);
+                } else {
+                    bundle.putString(FragmentTestMode.TYPE_OF_TEST, FragmentTestMode.TIMED_TEST_MODE);
+                }
+                fragmentTestMode.setArguments(bundle);
+                getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragmentTestMode).commit();
+            }
+        };
+
+        AlertDialog.Builder builder;
+        if (integer == 0) {
+            builder = new AlertDialog.Builder(context)
+                    .setMessage("You must have at least one set selected!")
+                    .setNegativeButton("Dismiss", null);
+        } else {
+            builder = new AlertDialog.Builder(context)
+                    .setTitle("Select your test mode (" + integer + " Sets currently selected)")
+                    .setItems(new CharSequence[]{"Feedback", "Timed"}, listener);
+        }
+        builder.create().show();
+    }
+
+    public class RetrieveSetsTask extends AsyncTask<String, Void, ArrayList<Set>> {
         private final WeakReference<View> view_reference;
         private final WeakReference<Context> context_reference;
         private final WeakReference<FragmentManager> managerReference;
@@ -150,11 +176,10 @@ public class FragmentAllSets extends Fragment {
             dao = SetDatabase.getInstance(context).setItemDao();
         }
 
-
         @Override
         protected ArrayList<Set> doInBackground(String... strings) {
             ArrayList<Set> setArrayList = new ArrayList<>();
-            switch (strings[0]) {
+            switch (type) {
                 case ALL_SETS:
                     setArrayList.addAll(dao.retrieveAllSets());
                     break;
@@ -166,6 +191,14 @@ public class FragmentAllSets extends Fragment {
                     break;
                 default:
                     break;
+            }
+            for (Set s : setArrayList) {
+                ArrayList<Card> newCards = new ArrayList<>(s.getSetCards().size());
+                for (Card c: s.getSetCards()) {
+                    c.setSetId(s.getId());
+                    newCards.add(c);
+                }
+                dao.updateSet(s.getId(), s.getTitle(), s.getDesc(), new Gson().toJson(newCards));
             }
             return setArrayList;
         }
@@ -182,12 +215,14 @@ public class FragmentAllSets extends Fragment {
         }
     }
 
-    private class RetrieveSelectedSetsTask extends AsyncTask<Void, Void, Integer> {
+    private class RetrieveSelectedNumberOfSetsTask extends AsyncTask<Void, Void, Integer> {
         private final WeakReference<Context> context;
         private final SetItemDao dao;
+        private final String type;
 
-        public RetrieveSelectedSetsTask(Context context) {
+        public RetrieveSelectedNumberOfSetsTask(Context context, String type) {
             this.context = new WeakReference<>(context);
+            this.type = type;
             dao = SetDatabase.getInstance(context).setItemDao();
         }
 
@@ -209,17 +244,7 @@ public class FragmentAllSets extends Fragment {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            AlertDialog.Builder builder;
-            if (integer == 0) {
-                builder = new AlertDialog.Builder(context.get())
-                        .setMessage("You must have at least one set selected!")
-                        .setNegativeButton("Dismiss", null);
-            } else {
-                builder = new AlertDialog.Builder(context.get())
-                        .setTitle("Select your test mode (" + integer + " Sets currently selected)")
-                        .setItems(new CharSequence[]{"Feedback", "Timed"}, listener);
-            }
-            builder.create().show();
+            setupFragmentChange(integer, context.get(), type);
         }
     }
 }

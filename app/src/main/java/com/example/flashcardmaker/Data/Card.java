@@ -3,6 +3,7 @@ package com.example.flashcardmaker.Data;
 public class Card {
     private String front = "";
     private String back = "";
+    private int setId;
 
     public Card(String front, String back) {
         this.front = front;
@@ -10,6 +11,14 @@ public class Card {
     }
 
     public Card() {
+    }
+
+    public int getSetId() {
+        return setId;
+    }
+
+    public void setSetId(int setId) {
+        this.setId = setId;
     }
 
     public String getFront() {

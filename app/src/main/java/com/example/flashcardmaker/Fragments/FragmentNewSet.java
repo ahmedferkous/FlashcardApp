@@ -148,6 +148,8 @@ public class FragmentNewSet extends Fragment implements CardsAdapter.onRemovedCa
 
         @Override
         protected Void doInBackground(String... strings) {
+            adapter.nullCheck();
+
             if (strings[0].equals(SAVE_KEY)) {
                 dao.insert(new Set(strings[1], strings[2], adapter.getCards()));
             } else {

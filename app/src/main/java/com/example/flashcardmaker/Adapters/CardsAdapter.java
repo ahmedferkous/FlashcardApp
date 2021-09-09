@@ -24,7 +24,6 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
     public static final String FRONT = "front";
     public static final String BACK = "back";
 
-
     public interface onRemovedCard {
         void onRemovedCardResult();
     }
@@ -35,6 +34,17 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
         notifyDataSetChanged();
+    }
+
+    public void nullCheck() {
+        for (Card c : cards) {
+            if (c.getFront() == null || c.getFront().equals("")) {
+                c.setFront("Front");
+            }
+            if (c.getBack() == null || c.getBack().equals("")) {
+                c.setBack("Back");
+            }
+        }
     }
 
     public ArrayList<Card> getCards() {

@@ -66,11 +66,14 @@ public interface SetItemDao {
     int receiveRecentlyStudiedSetsNumber();
 
     @Query("SELECT * FROM set_items WHERE selected=1")
-    List<Set> receiveAllSelectedSets();
+    List<Set> retrieveSelectedAllSets();
 
     @Query("SELECT * FROM set_items WHERE selected=1 AND favourite=1")
-    List<Set> receiveSelectedFavouriteSets();
+    List<Set> retrieveSelectedFavouriteSets();
 
     @Query("SELECT * FROM set_items WHERE selected=1 AND recentlyStudied=1")
-    List<Set> receiveSelectedRecentlyStudiedSets();
+    List<Set> retrieveSelectedRecentlyStudiedSets();
+
+    @Query("UPDATE set_items SET setCards=:cards WHERE id=:setId")
+    void updateCards(int setId, String cards);
 }
