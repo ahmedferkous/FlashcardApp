@@ -3,6 +3,7 @@ package com.example.flashcardmaker.Data;
 public class Card {
     private String front = "";
     private String back = "";
+    private boolean gotCorrect;
     private int setId;
 
     public Card(String front, String back) {
@@ -11,6 +12,14 @@ public class Card {
     }
 
     public Card() {
+    }
+
+    public boolean isGotCorrect() {
+        return gotCorrect;
+    }
+
+    public void setGotCorrect(boolean gotCorrect) {
+        this.gotCorrect = gotCorrect;
     }
 
     public int getSetId() {

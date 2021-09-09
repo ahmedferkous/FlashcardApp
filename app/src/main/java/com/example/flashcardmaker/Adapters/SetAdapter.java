@@ -18,9 +18,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flashcardmaker.Activities.MainActivity;
+import com.example.flashcardmaker.Data.Card;
 import com.example.flashcardmaker.Data.Database.SetDatabase;
 import com.example.flashcardmaker.Data.Database.SetItemDao;
 import com.example.flashcardmaker.Data.Set;
@@ -77,9 +79,10 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.set_item, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, context);
     }
 
+    // TODO: 10/09/2021 Fix code, many repeats here 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Set boundSet = sets.get(position);
@@ -94,6 +97,25 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         } else {
             holder.imageViewFavouritesFilled.setVisibility(View.INVISIBLE);
             holder.imageViewFavourites.setVisibility(View.VISIBLE);
+        }
+
+        if (boundSet.isRecentlyStudied()) {
+            holder.imgViewRecent.setVisibility(View.VISIBLE);
+            ArrayList<Card> cards = boundSet.getSetCards();
+            holder.adapter.setCards(cards);
+
+            if (holder.secondParent.getVisibility() == View.VISIBLE) {
+                holder.imgViewDropUp.setVisibility(View.VISIBLE);
+                holder.imgViewDropDown.setVisibility(View.GONE);
+            } else {
+                holder.imgViewDropUp.setVisibility(View.GONE);
+                holder.imgViewDropDown.setVisibility(View.VISIBLE);
+            }
+        } else {
+            holder.secondParent.setVisibility(View.GONE);
+            holder.imgViewRecent.setVisibility(View.GONE);
+            holder.imgViewDropDown.setVisibility(View.GONE);
+            holder.imgViewDropUp.setVisibility(View.GONE);
         }
 
         holder.imageViewFavourites.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +198,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                 builder.create().show();
             }
         });
+
         holder.parent.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -194,6 +217,26 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                 return true;
             }
         });
+
+        holder.imgViewDropDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.imgViewDropDown.setVisibility(View.GONE);
+                holder.secondParent.setVisibility(View.VISIBLE);
+                holder.imgViewDropUp.setVisibility(View.VISIBLE);
+            }
+        });
+
+        holder.imgViewDropUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.imgViewDropDown.setVisibility(View.VISIBLE);
+                holder.secondParent.setVisibility(View.GONE);
+                holder.imgViewDropUp.setVisibility(View.GONE);
+            }
+        });
+
+
     }
 
     @Override
@@ -204,10 +247,12 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtSetName, txtSetDesc, txtNumCards;
-        private ImageView imageViewFavourites, imageViewFavouritesFilled, imgViewFilledCheckbox, imgViewEmptyCheckbox;
-        private MaterialCardView parent;
+        private ImageView imageViewFavourites, imageViewFavouritesFilled, imgViewFilledCheckbox, imgViewEmptyCheckbox, imgViewRecent, imgViewDropDown, imgViewDropUp;
+        private MaterialCardView parent, secondParent;
+        private RecyclerView recView;
+        private  CardNameAdapter adapter;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
             txtSetName = itemView.findViewById(R.id.txtSetName);
             txtSetDesc = itemView.findViewById(R.id.txtSetDesc);
@@ -216,7 +261,15 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             imageViewFavouritesFilled = itemView.findViewById(R.id.imgViewFavouriteFilled);
             imgViewFilledCheckbox = itemView.findViewById(R.id.imgViewFilledCheckbox);
             imgViewEmptyCheckbox = itemView.findViewById(R.id.imgViewEmptyCheckbox);
+            imgViewRecent = itemView.findViewById(R.id.imgViewRecent);
+            imgViewDropDown = itemView.findViewById(R.id.imgViewDropDown);
+            imgViewDropUp = itemView.findViewById(R.id.imgViewDropUp);
+            secondParent = itemView.findViewById(R.id.secondParent);
             parent = itemView.findViewById(R.id.parent);
+            recView = itemView.findViewById(R.id.recView);
+            adapter = new CardNameAdapter(context);
+            recView.setLayoutManager(new LinearLayoutManager(context));
+            recView.setAdapter(adapter);
         }
     }
 

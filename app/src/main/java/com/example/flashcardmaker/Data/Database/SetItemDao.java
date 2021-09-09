@@ -38,6 +38,9 @@ public interface SetItemDao {
     @Query("UPDATE set_items SET selected=:integer WHERE id=:id")
     void updateSelectedById(int id, int integer);
 
+    @Query("UPDATE set_items SET recentlyStudied=:integer WHERE id=:id")
+    void updateRecentById(int id, int integer);
+
     @Query("UPDATE set_items SET selected=:integer")
     void updateSelectedStatusAll(int integer);
 

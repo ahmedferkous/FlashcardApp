@@ -5,11 +5,11 @@
     android:layout_margin="6dp">
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
         android:id="@+id/parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginRight="6dp"
-        android:layout_toStartOf="@id/imgViewEmptyCheckbox"
-        android:layout_height="wrap_content">
+        android:layout_toStartOf="@id/imgViewEmptyCheckbox">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -52,38 +52,105 @@
                 android:layout_height="30dp"
                 android:layout_below="@id/txtSetDesc"
                 android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/ic_favourites" />
+
+            <ImageView
+                android:id="@+id/imgViewRecent"
+                android:layout_width="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/txtSetDesc"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/imgViewFavourite"
+                android:src="@drawable/ic_recent"
+                />
 
 
             <ImageView
                 android:id="@+id/imgViewFavouriteFilled"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:visibility="invisible"
                 android:layout_below="@id/txtSetDesc"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_favouritesfilled" />
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_favouritesfilled"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/imgViewDropDown"
+                android:layout_width="30dp"
+                android:visibility="gone"
+                android:layout_height="30dp"
+                android:layout_below="@id/txtSetDesc"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_dropdown" />
+
+            <ImageView
+                android:id="@+id/imgViewDropUp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                android:layout_below="@id/txtSetDesc"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_dropup" />
 
 
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <ImageView
+        android:id="@+id/imgViewEmptyCheckbox"
         android:layout_width="30dp"
-        android:layout_height="30dp"
         android:visibility="gone"
-        android:src="@drawable/ic_emptycheckbox"
+        android:layout_height="30dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:id="@+id/imgViewEmptyCheckbox"/>
+        android:src="@drawable/ic_emptycheckbox" />
 
     <ImageView
+        android:id="@+id/imgViewFilledCheckbox"
         android:layout_width="30dp"
-        android:visibility="gone"
-        android:layout_centerVertical="true"
         android:layout_height="30dp"
-        android:src="@drawable/ic_filledcheckbox"
         android:layout_alignParentEnd="true"
-        android:id="@+id/imgViewFilledCheckbox"/>
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_filledcheckbox"
+        android:visibility="gone" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/parent"
+        android:visibility="gone"
+        android:id="@+id/secondParent"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@id/imgViewEmptyCheckbox">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp">
+
+            <TextView
+                android:id="@+id/txtResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Results"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:id="@+id/recView"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtResults"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </RelativeLayout>

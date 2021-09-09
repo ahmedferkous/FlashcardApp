@@ -3,7 +3,10 @@ package com.example.flashcardmaker.Fragments;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +35,7 @@ import com.example.flashcardmaker.Data.Set;
 import com.example.flashcardmaker.Fragments.ChildFragments.FragmentBigCardBack;
 import com.example.flashcardmaker.Fragments.ChildFragments.FragmentBigCardFront;
 import com.example.flashcardmaker.R;
+import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -50,14 +55,15 @@ public class FragmentTestMode extends Fragment {
 
     private TextView txtTime, txtTestTitle, txtTitleInfo, txtTestInfo, txtTimeTicking;
     private EditText edtTxtAnswer;
-    private Button btnSubmitAnswer, btnNextQuestion, btnStart;
-    private RelativeLayout mainRelLayoutTest, initialRelLayout, finalInitialRelLayout;
+    private Button btnSubmitAnswer, btnNextQuestion, btnStart, btnComplete;
+    private RelativeLayout mainRelLayoutTest, initialRelLayout, finalInitialRelLayout, completedRelLayout;
     private FragmentBigCardFront fragmentBigCardFront;
     private FragmentBigCardBack fragmentBigCardBack;
 
     private SecondsViewModel secondsViewModel;
     private ArrayList<Card> cardsPool = new ArrayList<>();
-    private int sizeOfPool = 0;
+    private ArrayList<Set> selectedSets = new ArrayList<>();
+    private int incrementingIndex;
 
     @Nullable
     @Override
@@ -97,6 +103,7 @@ public class FragmentTestMode extends Fragment {
         edtTxtAnswer = view.findViewById(R.id.edtTxtAnswer);
         btnSubmitAnswer = view.findViewById(R.id.btnSubmitAnswer);
         btnNextQuestion = view.findViewById(R.id.btnNextQuestion);
+        btnComplete = view.findViewById(R.id.btnComplete);
         mainRelLayoutTest = view.findViewById(R.id.mainRelLayoutTest);
         initialRelLayout = view.findViewById(R.id.initialRelLayout);
         txtTitleInfo = view.findViewById(R.id.txtTitleInfo);
@@ -104,6 +111,7 @@ public class FragmentTestMode extends Fragment {
         txtTimeTicking = view.findViewById(R.id.txtTimeTicking);
         btnStart = view.findViewById(R.id.btnStart);
         finalInitialRelLayout = view.findViewById(R.id.finalInitialRelLayout);
+        completedRelLayout = view.findViewById(R.id.completedRelLayout);
     }
 
     private void setupTimedTestMode() {
@@ -122,12 +130,12 @@ public class FragmentTestMode extends Fragment {
         txtTestInfo.setText(FEEDBACK_INFO);
     }
 
+    @SuppressLint("SetTextI18n")
     private void completeSetupFeedbackTestMode() {
-        if (cardsPool.size() != 0) {
-            Card nextAvailableCard = cardsPool.get(0);
-            cardsPool.remove(0);
-            Log.d(TAG, "completeSetupFeedbackTestMode: " + nextAvailableCard.getFront());
-            txtTestTitle.setText("Card " + String.valueOf(sizeOfPool - cardsPool.size()) + "/"+String.valueOf(sizeOfPool));
+        if (incrementingIndex != cardsPool.size() ) {
+            Card nextAvailableCard = cardsPool.get(incrementingIndex);
+
+            txtTestTitle.setText("Card " + String.valueOf(incrementingIndex+1) + "/" + cardsPool.size());
 
             fragmentBigCardFront.setFront(nextAvailableCard.getFront());
             fragmentBigCardBack.setBack(nextAvailableCard.getBack());
@@ -140,9 +148,13 @@ public class FragmentTestMode extends Fragment {
                     String response = edtTxtAnswer.getText().toString();
                     if (answerEquals(response, nextAvailableCard.getBack())) {
                         fragmentBigCardBack.setCorrectStatus(true);
+                        nextAvailableCard.setGotCorrect(true);
                     } else {
                         fragmentBigCardBack.setCorrectStatus(false);
+                        nextAvailableCard.setGotCorrect(false);
                     }
+                    cardsPool.set(incrementingIndex, nextAvailableCard);
+
                     getChildFragmentManager().beginTransaction().setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
                             R.animator.card_flip_left_in, R.animator.card_flip_left_out).replace(R.id.childFragmentContainer, fragmentBigCardBack).commit();
 
@@ -152,20 +164,23 @@ public class FragmentTestMode extends Fragment {
                     btnNextQuestion.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (cardsPool.size() == 0) {
-                                btnNextQuestion.setText("Finish");
-                            }
                             btnSubmitAnswer.setVisibility(View.VISIBLE);
                             btnNextQuestion.setVisibility(View.INVISIBLE);
+                            incrementingIndex++;
                             completeSetupFeedbackTestMode();
                         }
                     });
                 }
             });
         } else {
-            // TODO: 9/09/2021 navigate to another fragment instead of the below 
             mainRelLayoutTest.setVisibility(View.GONE);
-            // TODO: 9/09/2021 using card.setId, update scores and all 
+            completedRelLayout.setVisibility(View.VISIBLE);
+            btnComplete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new UpdateCardsPoolWithSets(getContext()).execute();
+                }
+            });
         }
     }
 
@@ -174,10 +189,10 @@ public class FragmentTestMode extends Fragment {
     }
 
 
-    private ArrayList<Card> getCardsPool(ArrayList<Set> sets) {
+    private ArrayList<Card> getCardsPool() {
         ArrayList<Card> cardsPool = new ArrayList<>();
-        for (int i = 0; i < sets.size(); i++) {
-            cardsPool.addAll(sets.get(i).getSetCards());
+        for (int i = 0; i < selectedSets.size(); i++) {
+            cardsPool.addAll(selectedSets.get(i).getSetCards());
         }
         return cardsPool;
     }
@@ -197,14 +212,14 @@ public class FragmentTestMode extends Fragment {
                         minutes, secs);
 
                 txtTime.setText("Time Elapsed - " + time);
-                secondsViewModel.setMainSeconds(seconds+1);
+                secondsViewModel.setMainSeconds(seconds + 1);
 
                 handler.postDelayed(this, 1000);
             }
         });
     }
 
-    private void runCountdownTimer(String typeOfTest, ArrayList<Set> sets) {
+    private void runCountdownTimer(String typeOfTest) {
         final Handler handler = new Handler();
         handler.post(new Runnable() {
             @Override
@@ -221,8 +236,7 @@ public class FragmentTestMode extends Fragment {
                 } else {
                     finalInitialRelLayout.setVisibility(View.GONE);
                     mainRelLayoutTest.setVisibility(View.VISIBLE);
-                    cardsPool = getCardsPool(sets);
-                    sizeOfPool = cardsPool.size();
+                    cardsPool = getCardsPool();
 
                     if (typeOfTest.equals(TIMED_TEST_MODE)) {
                         completeSetupTimedTestMode();
@@ -270,7 +284,53 @@ public class FragmentTestMode extends Fragment {
             super.onPostExecute(sets);
             initialRelLayout.setVisibility(View.GONE);
             finalInitialRelLayout.setVisibility(View.VISIBLE);
-            runCountdownTimer(typeOfTest, sets);
+            selectedSets = sets;
+            runCountdownTimer(typeOfTest);
+        }
+    }
+
+    private class UpdateCardsPoolWithSets extends AsyncTask<Void, Void, Void> {
+        private SetItemDao dao;
+
+        public UpdateCardsPoolWithSets(Context context) {
+            dao = SetDatabase.getInstance(context).setItemDao();
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ArrayList<Integer> setIds = new ArrayList<>();
+
+            for (Card c : cardsPool) {
+                if (!(setIds.contains(c.getSetId()))) {
+                    setIds.add(c.getSetId());
+                }
+            }
+
+            for (Integer setId : setIds) {
+                ArrayList<Card> newCards = new ArrayList<>();
+                for (Card c : cardsPool) {
+                    if (setId.equals(c.getSetId())) {
+                        newCards.add(c);
+                    }
+                }
+                dao.updateCards(setId, new Gson().toJson(newCards));
+                dao.updateRecentById(setId, 1);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            Bundle bundle = new Bundle();
+            FragmentAllSets fragmentAllSets = new FragmentAllSets();
+            bundle.putString(FragmentAllSets.TYPE_SET, FragmentAllSets.RECENTLY_STUDIED_SETS);
+            fragmentAllSets.setArguments(bundle);
+            transaction.replace(R.id.fragmentContainer, fragmentAllSets);
+            transaction.commit();
+            Toast.makeText(getContext(), "Test Completed!", Toast.LENGTH_SHORT).show();
         }
     }
 }

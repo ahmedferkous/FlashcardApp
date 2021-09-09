@@ -19,7 +19,7 @@
             android:layout_centerHorizontal="true"
             android:text="Time Elapsed - 0.00"
             android:textColor="@color/slightWhite"
-            android:textSize="18sp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_marginTop="15dp"
             android:text="Card 1/45"
             android:textColor="@color/slightWhite"
-            android:textSize="18sp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <androidx.fragment.app.FragmentContainerView
@@ -132,6 +132,34 @@
             android:textColor="@color/slightWhite"
             android:textSize="100sp"
             android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/completedRelLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btnComplete"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:textColor="@color/slightWhite"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Test Completed!"/>
+
+        <Button
+            android:layout_width="200dp"
+            android:id="@+id/btnComplete"
+            android:layout_height="60dp"
+            android:text="See Results"
+            android:layout_centerInParent="true"/>
+
+
 
     </RelativeLayout>
 

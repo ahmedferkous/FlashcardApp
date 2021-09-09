@@ -8,16 +8,16 @@
         android:id="@+id/recView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/btnTestMode"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:text="TEST"
-        android:visibility="gone"
         android:layout_toStartOf="@id/relLayoutCheckbox"
         android:layout_marginEnd="15dp"
         android:id="@+id/btnTestMode"/>
@@ -27,7 +27,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:text="begin (hold to cancel)"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:layout_toStartOf="@id/relLayoutCheckbox"
         android:layout_marginEnd="15dp"
         android:id="@+id/btnFinalTestMode"/>

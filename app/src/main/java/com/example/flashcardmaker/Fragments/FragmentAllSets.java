@@ -40,7 +40,6 @@ public class FragmentAllSets extends Fragment {
     public static final String FAVOURITE_SETS = "favourite_sets";
     public static final String RECENTLY_STUDIED_SETS = "recently_studied_sets";
 
-    private RecyclerView recView;
     private SetAdapter adapter;
     private RelativeLayout relLayoutCheckbox;
     private Button btnTestMode, btnFinalTestMode;
