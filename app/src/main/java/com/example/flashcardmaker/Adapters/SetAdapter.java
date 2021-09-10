@@ -7,11 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceControl;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,18 +19,18 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.flashcardmaker.Activities.MainActivity;
 import com.example.flashcardmaker.Data.Card;
 import com.example.flashcardmaker.Data.Database.SetDatabase;
 import com.example.flashcardmaker.Data.Database.SetItemDao;
 import com.example.flashcardmaker.Data.Set;
-import com.example.flashcardmaker.Fragments.FragmentAllSets;
+import com.example.flashcardmaker.Fragments.FragmentSets;
 import com.example.flashcardmaker.Fragments.FragmentNewSet;
 import com.example.flashcardmaker.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
@@ -82,7 +80,6 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         return new ViewHolder(view, context);
     }
 
-    // TODO: 10/09/2021 Fix code, many repeats here 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Set boundSet = sets.get(position);
@@ -125,7 +122,6 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                 holder.imageViewFavourites.setVisibility(View.INVISIBLE);
                 boundSet.setFavourite(true);
                 new UpdateFavouritesOrSelectedTask(context).execute(boundSet.getId(), 1, -1);
-                notifyItemChanged(position);
             }
         });
 
@@ -136,11 +132,11 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                 holder.imageViewFavourites.setVisibility(View.VISIBLE);
                 boundSet.setFavourite(false);
                 new UpdateFavouritesOrSelectedTask(context).execute(boundSet.getId(), 0, -1);
-                notifyItemChanged(position);
             }
         });
 
         if (shouldShow) {
+
             if (boundSet.isSelected()) {
                 holder.imgViewFilledCheckbox.setVisibility(View.VISIBLE);
                 holder.imgViewEmptyCheckbox.setVisibility(View.INVISIBLE);
@@ -156,7 +152,6 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                     holder.imgViewEmptyCheckbox.setVisibility(View.INVISIBLE);
                     boundSet.setSelected(true);
                     new UpdateFavouritesOrSelectedTask(context).execute(boundSet.getId(), 1, 1);
-                    notifyItemChanged(position);
                 }
             });
 
@@ -167,7 +162,6 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                     holder.imgViewEmptyCheckbox.setVisibility(View.VISIBLE);
                     boundSet.setSelected(false);
                     new UpdateFavouritesOrSelectedTask(context).execute(boundSet.getId(), 0, 1);
-                    notifyItemChanged(position);
                 }
             });
         } else {
@@ -224,6 +218,16 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                 holder.imgViewDropDown.setVisibility(View.GONE);
                 holder.secondParent.setVisibility(View.VISIBLE);
                 holder.imgViewDropUp.setVisibility(View.VISIBLE);
+
+                double percentage = Double.parseDouble(calculatePercentage(boundSet.getSetCards()));
+                if (percentage >= 60.00) {
+                    holder.txtResultPercentage.setTextColor(context.getResources().getColor(R.color.lightGreen));
+                } else if (percentage >= 50.00 && percentage < 60.00) {
+                    holder.txtResultPercentage.setTextColor(context.getResources().getColor(R.color.lightYellow));
+                } else if (percentage >= 0.00 && percentage < 50.00) {
+                    holder.txtResultPercentage.setTextColor(context.getResources().getColor(R.color.lightRed));
+                }
+                holder.txtResultPercentage.setText(String.valueOf(percentage)+"%");
             }
         });
 
@@ -236,7 +240,21 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             }
         });
 
+    }
 
+    private String calculatePercentage(ArrayList<Card> setCards) {
+        DecimalFormat format = new DecimalFormat("#00.00");
+        double numberOfCorrect = 0.0;
+        double totalQuestions = setCards.size();
+
+        for (Card c : setCards) {
+            Log.d(TAG, "calculatePercentage: " + c.getGotCorrect());
+            if (c.getGotCorrect() == 1) {
+                numberOfCorrect += 1;
+            }
+        }
+        Log.d(TAG, "calculatePercentage: " + totalQuestions);
+        return format.format((numberOfCorrect / totalQuestions) * 100);
     }
 
     @Override
@@ -244,19 +262,19 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         return sets.size();
     }
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txtSetName, txtSetDesc, txtNumCards;
+        private TextView txtSetName, txtSetDesc, txtNumCards, txtResultPercentage;
         private ImageView imageViewFavourites, imageViewFavouritesFilled, imgViewFilledCheckbox, imgViewEmptyCheckbox, imgViewRecent, imgViewDropDown, imgViewDropUp;
         private MaterialCardView parent, secondParent;
         private RecyclerView recView;
-        private  CardNameAdapter adapter;
+        private CardNameAdapter adapter;
 
         public ViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
             txtSetName = itemView.findViewById(R.id.txtSetName);
             txtSetDesc = itemView.findViewById(R.id.txtSetDesc);
             txtNumCards = itemView.findViewById(R.id.txtNumCards);
+            txtResultPercentage = itemView.findViewById(R.id.txtResultPercentage);
             imageViewFavourites = itemView.findViewById(R.id.imgViewFavourite);
             imageViewFavouritesFilled = itemView.findViewById(R.id.imgViewFavouriteFilled);
             imgViewFilledCheckbox = itemView.findViewById(R.id.imgViewFilledCheckbox);
@@ -295,20 +313,20 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             } else if (integers[2] == 0) {
                 int boolSelectedAll = integers[1];
                 switch (type) {
-                    case FragmentAllSets.ALL_SETS:
+                    case FragmentSets.ALL_SETS:
                         Log.d(TAG, "doInBackground: ?");
                         dao.updateSelectedStatusAll(boolSelectedAll);
                         break;
-                    case FragmentAllSets.FAVOURITE_SETS:
+                    case FragmentSets.FAVOURITE_SETS:
                         dao.updateSelectedStatusFavourites(boolSelectedAll);
                         break;
-                    case FragmentAllSets.RECENTLY_STUDIED_SETS:
+                    case FragmentSets.RECENTLY_STUDIED_SETS:
                         dao.updateSelectedStatusRecent(boolSelectedAll);
                         break;
                     default:
                         break;
                 }
-            } else if (integers[2] == 1){
+            } else if (integers[2] == 1) {
                 int setId = integers[0];
                 int boolSelected = integers[1];
                 dao.updateSelectedById(setId, boolSelected);
@@ -325,6 +343,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             dao = SetDatabase.getInstance(context).setItemDao();
             reference = new WeakReference<>(context);
         }
+
         @Override
         protected Void doInBackground(Integer... integers) {
             dao.deleteSetById(integers[0]);

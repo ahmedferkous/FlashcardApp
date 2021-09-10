@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:layout_margin="5dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:textSize="18sp"
         android:text="Card Front Name"
         android:id="@+id/txtCardName"/>
@@ -13,19 +14,32 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_toEndOf="@id/txtCardName"
+        android:layout_below="@id/txtCardName"
         android:layout_marginStart="5dp"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/ic_wrong"
         android:id="@+id/imgViewWrong"/>
 
     <ImageView
-        android:layout_width="30dp"
-        android:visibility="gone"
         android:layout_height="30dp"
-        android:layout_toEndOf="@id/txtCardName"
+        android:layout_width="30dp"
+        android:layout_below="@id/txtCardName"
+        android:visibility="gone"
         android:layout_marginStart="5dp"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/ic_correct"
         android:id="@+id/imgViewCorrect"/>
-        
+
+    <ImageView
+        android:layout_height="30dp"
+        android:layout_width="30dp"
+        android:layout_below="@id/txtCardName"
+        android:visibility="gone"
+        android:layout_marginStart="5dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_empty"
+        android:id="@+id/imgViewEmpty"/>
+
 
 </RelativeLayout>

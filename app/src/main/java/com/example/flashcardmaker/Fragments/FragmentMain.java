@@ -46,11 +46,11 @@ public class FragmentMain extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                FragmentAllSets fragmentAllSets = new FragmentAllSets();
+                FragmentSets fragmentSets = new FragmentSets();
                 Bundle bundle = new Bundle();
-                bundle.putString(FragmentAllSets.TYPE_SET, FragmentAllSets.ALL_SETS);
-                fragmentAllSets.setArguments(bundle);
-                transaction.replace(R.id.fragmentContainer, fragmentAllSets);
+                bundle.putString(FragmentSets.TYPE_SET, FragmentSets.ALL_SETS);
+                fragmentSets.setArguments(bundle);
+                transaction.replace(R.id.fragmentContainer, fragmentSets);
                 transaction.commit();
             }
         });
@@ -59,11 +59,11 @@ public class FragmentMain extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                FragmentAllSets fragmentAllSets = new FragmentAllSets();
+                FragmentSets fragmentSets = new FragmentSets();
                 Bundle bundle = new Bundle();
-                bundle.putString(FragmentAllSets.TYPE_SET, FragmentAllSets.FAVOURITE_SETS);
-                fragmentAllSets.setArguments(bundle);
-                transaction.replace(R.id.fragmentContainer, fragmentAllSets);
+                bundle.putString(FragmentSets.TYPE_SET, FragmentSets.FAVOURITE_SETS);
+                fragmentSets.setArguments(bundle);
+                transaction.replace(R.id.fragmentContainer, fragmentSets);
                 transaction.commit();
             }
         });
@@ -72,11 +72,11 @@ public class FragmentMain extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                FragmentAllSets fragmentAllSets = new FragmentAllSets();
+                FragmentSets fragmentSets = new FragmentSets();
                 Bundle bundle = new Bundle();
-                bundle.putString(FragmentAllSets.TYPE_SET, FragmentAllSets.RECENTLY_STUDIED_SETS);
-                fragmentAllSets.setArguments(bundle);
-                transaction.replace(R.id.fragmentContainer, fragmentAllSets);
+                bundle.putString(FragmentSets.TYPE_SET, FragmentSets.RECENTLY_STUDIED_SETS);
+                fragmentSets.setArguments(bundle);
+                transaction.replace(R.id.fragmentContainer, fragmentSets);
                 transaction.commit();
             }
         });

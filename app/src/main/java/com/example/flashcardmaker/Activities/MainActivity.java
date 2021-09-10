@@ -12,8 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.flashcardmaker.Adapters.SetAdapter;
-import com.example.flashcardmaker.Fragments.FragmentAllSets;
+import com.example.flashcardmaker.Fragments.FragmentSets;
 import com.example.flashcardmaker.Fragments.FragmentMain;
 import com.example.flashcardmaker.Fragments.FragmentNewSet;
 import com.example.flashcardmaker.R;
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
-        FragmentAllSets fragmentAllSets = new FragmentAllSets();
+        FragmentSets fragmentSets = new FragmentSets();
         switch (item.getItemId()) {
             case R.id.action_home:
                 transaction.replace(R.id.fragmentContainer, new FragmentMain());
@@ -56,19 +55,19 @@ public class MainActivity extends AppCompatActivity {
                 transaction.replace(R.id.fragmentContainer, fragmentNewSet);
                 break;
             case R.id.action_my_flashcards:
-                bundle.putString(FragmentAllSets.TYPE_SET, FragmentAllSets.ALL_SETS);
-                fragmentAllSets.setArguments(bundle);
-                transaction.replace(R.id.fragmentContainer, fragmentAllSets);
+                bundle.putString(FragmentSets.TYPE_SET, FragmentSets.ALL_SETS);
+                fragmentSets.setArguments(bundle);
+                transaction.replace(R.id.fragmentContainer, fragmentSets);
                 break;
             case R.id.action_recently_studied:
-                bundle.putString(FragmentAllSets.TYPE_SET, FragmentAllSets.RECENTLY_STUDIED_SETS);
-                fragmentAllSets.setArguments(bundle);
-                transaction.replace(R.id.fragmentContainer, fragmentAllSets);
+                bundle.putString(FragmentSets.TYPE_SET, FragmentSets.RECENTLY_STUDIED_SETS);
+                fragmentSets.setArguments(bundle);
+                transaction.replace(R.id.fragmentContainer, fragmentSets);
                 break;
             case R.id.action_favourite:
-                bundle.putString(FragmentAllSets.TYPE_SET, FragmentAllSets.FAVOURITE_SETS);
-                fragmentAllSets.setArguments(bundle);
-                transaction.replace(R.id.fragmentContainer, fragmentAllSets);
+                bundle.putString(FragmentSets.TYPE_SET, FragmentSets.FAVOURITE_SETS);
+                fragmentSets.setArguments(bundle);
+                transaction.replace(R.id.fragmentContainer, fragmentSets);
                 break;
             default:
                 break;

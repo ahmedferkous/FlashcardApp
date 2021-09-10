@@ -131,6 +131,8 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             Card card = cards.get(position);
+            card.setGotCorrect(-1);
+
             if (type.equals(FRONT)) {
                 card.setFront(s + "");
             } else {

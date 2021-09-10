@@ -58,6 +58,7 @@
             <ImageView
                 android:id="@+id/imgViewRecent"
                 android:layout_width="30dp"
+                android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:layout_height="30dp"
                 android:layout_below="@id/txtSetDesc"
@@ -141,11 +142,22 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_below="@id/txtResults"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                android:text="%"
+                android:id="@+id/txtResultPercentage"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="wrap_content"
                 android:id="@+id/recView"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtResults"
+                android:layout_below="@id/txtResultPercentage"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp" />
 

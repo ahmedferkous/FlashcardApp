@@ -3,7 +3,6 @@ package com.example.flashcardmaker.Fragments;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +98,6 @@ public class FragmentNewSet extends Fragment implements CardsAdapter.onRemovedCa
             }
         });
 
-        // TODO: 7/09/2021 validation testing (already exists, text fields filled in)
         txtSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,11 +161,11 @@ public class FragmentNewSet extends Fragment implements CardsAdapter.onRemovedCa
             super.onPostExecute(aVoid);
             Toast.makeText(context_reference.get(), "Successfully Saved/Edited Set!", Toast.LENGTH_SHORT).show();
             FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-            FragmentAllSets fragmentAllSets = new FragmentAllSets();
+            FragmentSets fragmentSets = new FragmentSets();
             Bundle bundle = new Bundle();
-            bundle.putString(FragmentAllSets.TYPE_SET, FragmentAllSets.ALL_SETS);
-            fragmentAllSets.setArguments(bundle);
-            transaction.replace(R.id.fragmentContainer, fragmentAllSets);
+            bundle.putString(FragmentSets.TYPE_SET, FragmentSets.ALL_SETS);
+            fragmentSets.setArguments(bundle);
+            transaction.replace(R.id.fragmentContainer, fragmentSets);
             transaction.commit();
         }
     }

@@ -1,14 +1,10 @@
 package com.example.flashcardmaker.Fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.flashcardmaker.Activities.SecondsViewModel;
@@ -37,13 +32,12 @@ import com.example.flashcardmaker.Fragments.ChildFragments.FragmentBigCardFront;
 import com.example.flashcardmaker.R;
 import com.google.gson.Gson;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static com.example.flashcardmaker.Fragments.FragmentAllSets.ALL_SETS;
-import static com.example.flashcardmaker.Fragments.FragmentAllSets.FAVOURITE_SETS;
-import static com.example.flashcardmaker.Fragments.FragmentAllSets.RECENTLY_STUDIED_SETS;
+import static com.example.flashcardmaker.Fragments.FragmentSets.ALL_SETS;
+import static com.example.flashcardmaker.Fragments.FragmentSets.FAVOURITE_SETS;
+import static com.example.flashcardmaker.Fragments.FragmentSets.RECENTLY_STUDIED_SETS;
 
 public class FragmentTestMode extends Fragment {
     private static final String TAG = "FragmentTestMode";
@@ -78,7 +72,7 @@ public class FragmentTestMode extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             String typeOfTest = bundle.getString(TYPE_OF_TEST);
-            String type = bundle.getString(FragmentAllSets.TYPE_SET, null);
+            String type = bundle.getString(FragmentSets.TYPE_SET, null);
             if (typeOfTest != null && type != null) {
                 if (typeOfTest.equals(TIMED_TEST_MODE)) {
                     setupTimedTestMode();
@@ -121,21 +115,10 @@ public class FragmentTestMode extends Fragment {
     }
 
     private void completeSetupTimedTestMode() {
-
-    }
-
-    private void setupFeedbackTestMode() {
-        getActivity().setTitle(FEEDBACK_TEST_MODE);
-        txtTitleInfo.setText(FEEDBACK_TEST_MODE);
-        txtTestInfo.setText(FEEDBACK_INFO);
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void completeSetupFeedbackTestMode() {
-        if (incrementingIndex != cardsPool.size() ) {
+        if (incrementingIndex != cardsPool.size()) {
             Card nextAvailableCard = cardsPool.get(incrementingIndex);
 
-            txtTestTitle.setText("Card " + String.valueOf(incrementingIndex+1) + "/" + cardsPool.size());
+            txtTestTitle.setText("Card " + String.valueOf(incrementingIndex + 1) + "/" + cardsPool.size());
 
             fragmentBigCardFront.setFront(nextAvailableCard.getFront());
             fragmentBigCardBack.setBack(nextAvailableCard.getBack());
@@ -148,10 +131,50 @@ public class FragmentTestMode extends Fragment {
                     String response = edtTxtAnswer.getText().toString();
                     if (answerEquals(response, nextAvailableCard.getBack())) {
                         fragmentBigCardBack.setCorrectStatus(true);
-                        nextAvailableCard.setGotCorrect(true);
+                        nextAvailableCard.setGotCorrect(1);
                     } else {
                         fragmentBigCardBack.setCorrectStatus(false);
-                        nextAvailableCard.setGotCorrect(false);
+                        nextAvailableCard.setGotCorrect(0);
+                    }
+                    cardsPool.set(incrementingIndex, nextAvailableCard);
+                    incrementingIndex++;
+                    edtTxtAnswer.setText("");
+                    completeSetupTimedTestMode();
+                }
+            });
+        } else {
+            completeTest();
+        }
+    }
+
+    private void setupFeedbackTestMode() {
+        getActivity().setTitle(FEEDBACK_TEST_MODE);
+        txtTitleInfo.setText(FEEDBACK_TEST_MODE);
+        txtTestInfo.setText(FEEDBACK_INFO);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void completeSetupFeedbackTestMode() {
+        if (incrementingIndex != cardsPool.size()) {
+            Card nextAvailableCard = cardsPool.get(incrementingIndex);
+
+            txtTestTitle.setText("Card " + String.valueOf(incrementingIndex + 1) + "/" + cardsPool.size());
+
+            fragmentBigCardFront.setFront(nextAvailableCard.getFront());
+            fragmentBigCardBack.setBack(nextAvailableCard.getBack());
+
+            getChildFragmentManager().beginTransaction().replace(R.id.childFragmentContainer, fragmentBigCardFront).commit();
+
+            btnSubmitAnswer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String response = edtTxtAnswer.getText().toString();
+                    if (answerEquals(response, nextAvailableCard.getBack())) {
+                        fragmentBigCardBack.setCorrectStatus(true);
+                        nextAvailableCard.setGotCorrect(1);
+                    } else {
+                        fragmentBigCardBack.setCorrectStatus(false);
+                        nextAvailableCard.setGotCorrect(0);
                     }
                     cardsPool.set(incrementingIndex, nextAvailableCard);
 
@@ -166,6 +189,7 @@ public class FragmentTestMode extends Fragment {
                         public void onClick(View v) {
                             btnSubmitAnswer.setVisibility(View.VISIBLE);
                             btnNextQuestion.setVisibility(View.INVISIBLE);
+                            edtTxtAnswer.setText("");
                             incrementingIndex++;
                             completeSetupFeedbackTestMode();
                         }
@@ -173,21 +197,25 @@ public class FragmentTestMode extends Fragment {
                 }
             });
         } else {
-            mainRelLayoutTest.setVisibility(View.GONE);
-            completedRelLayout.setVisibility(View.VISIBLE);
-            btnComplete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new UpdateCardsPoolWithSets(getContext()).execute();
-                }
-            });
+            completeTest();
         }
+    }
+
+    private void completeTest() {
+        mainRelLayoutTest.setVisibility(View.GONE);
+        completedRelLayout.setVisibility(View.VISIBLE);
+
+        btnComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new UpdateCardsPoolWithSets(getContext()).execute();
+            }
+        });
     }
 
     private static boolean answerEquals(String textToCompare, String originalText) {
         return originalText.equalsIgnoreCase(textToCompare);
     }
-
 
     private ArrayList<Card> getCardsPool() {
         ArrayList<Card> cardsPool = new ArrayList<>();
@@ -240,14 +268,36 @@ public class FragmentTestMode extends Fragment {
 
                     if (typeOfTest.equals(TIMED_TEST_MODE)) {
                         completeSetupTimedTestMode();
+                        int totalMili = secondsViewModel.getMillisecondsPerQuestion() * cardsPool.size();
+                        new CountDownTimer(totalMili, 1000) {
+
+                            public void onTick(long millisUntilFinished) {
+                                txtTime.setText("Seconds Remaining - " + millisUntilFinished / 1000);
+                                //here you can have your logic to set text to edittext
+                            }
+
+                            public void onFinish() {
+                                mainRelLayoutTest.setVisibility(View.GONE);
+                                completedRelLayout.setVisibility(View.VISIBLE);
+
+                                btnComplete.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        new UpdateCardsPoolWithSets(getContext()).execute();
+                                    }
+                                });
+                            }
+
+                        }.start();
                     } else if (typeOfTest.equals(FEEDBACK_TEST_MODE)) {
                         completeSetupFeedbackTestMode();
+                        runTimer();
                     }
-                    runTimer();
                 }
             }
         });
     }
+
 
     private class RetrieveSelectedSetsTask extends AsyncTask<Void, Void, ArrayList<Set>> {
         private SetItemDao dao;
@@ -325,10 +375,10 @@ public class FragmentTestMode extends Fragment {
             super.onPostExecute(aVoid);
             FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
             Bundle bundle = new Bundle();
-            FragmentAllSets fragmentAllSets = new FragmentAllSets();
-            bundle.putString(FragmentAllSets.TYPE_SET, FragmentAllSets.RECENTLY_STUDIED_SETS);
-            fragmentAllSets.setArguments(bundle);
-            transaction.replace(R.id.fragmentContainer, fragmentAllSets);
+            FragmentSets fragmentSets = new FragmentSets();
+            bundle.putString(FragmentSets.TYPE_SET, FragmentSets.RECENTLY_STUDIED_SETS);
+            fragmentSets.setArguments(bundle);
+            transaction.replace(R.id.fragmentContainer, fragmentSets);
             transaction.commit();
             Toast.makeText(getContext(), "Test Completed!", Toast.LENGTH_SHORT).show();
         }

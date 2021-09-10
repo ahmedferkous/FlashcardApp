@@ -33,7 +33,7 @@ import com.google.gson.Gson;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class FragmentAllSets extends Fragment {
+public class FragmentSets extends Fragment {
     private static final String TAG = "FragmentAllSets";
     public static final String ALL_SETS = "all_sets";
     public static final String TYPE_SET = "type_set";
