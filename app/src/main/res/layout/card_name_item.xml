@@ -6,7 +6,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:textSize="18sp"
         android:text="Card Front Name"
         android:id="@+id/txtCardName"/>
@@ -17,7 +16,6 @@
         android:layout_below="@id/txtCardName"
         android:layout_marginStart="5dp"
         android:visibility="gone"
-        android:layout_centerHorizontal="true"
         android:src="@drawable/ic_wrong"
         android:id="@+id/imgViewWrong"/>
 
@@ -27,7 +25,6 @@
         android:layout_below="@id/txtCardName"
         android:visibility="gone"
         android:layout_marginStart="5dp"
-        android:layout_centerHorizontal="true"
         android:src="@drawable/ic_correct"
         android:id="@+id/imgViewCorrect"/>
 
@@ -37,7 +34,6 @@
         android:layout_below="@id/txtCardName"
         android:visibility="gone"
         android:layout_marginStart="5dp"
-        android:layout_centerHorizontal="true"
         android:src="@drawable/ic_empty"
         android:id="@+id/imgViewEmpty"/>
 
