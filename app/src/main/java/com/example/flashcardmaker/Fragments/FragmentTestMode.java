@@ -120,6 +120,8 @@ public class FragmentTestMode extends Fragment {
 
             txtTestTitle.setText("Card " + String.valueOf(incrementingIndex + 1) + "/" + cardsPool.size());
 
+            fragmentBigCardBack = new FragmentBigCardBack();
+            fragmentBigCardFront = new FragmentBigCardFront();
             fragmentBigCardFront.setFront(nextAvailableCard.getFront());
             fragmentBigCardBack.setBack(nextAvailableCard.getBack());
 
@@ -160,6 +162,8 @@ public class FragmentTestMode extends Fragment {
 
             txtTestTitle.setText("Card " + String.valueOf(incrementingIndex + 1) + "/" + cardsPool.size());
 
+            fragmentBigCardBack = new FragmentBigCardBack();
+            fragmentBigCardFront = new FragmentBigCardFront();
             fragmentBigCardFront.setFront(nextAvailableCard.getFront());
             fragmentBigCardBack.setBack(nextAvailableCard.getBack());
 
